@@ -39,8 +39,10 @@ export default function RegisterPage() {
     const _password = React.useRef()
     const _passwordConfirm = React.useRef()
     const navigate = useNavigate()
+    const [process, setProcess] = React.useState(true)
 
     const handleSubmit = async () => {
+        setProcess(false)
         const firstName = _firstName.current.value
         const lastName = _lastName.current.value
         const username = _username.current.value
@@ -91,6 +93,7 @@ export default function RegisterPage() {
         } else {
             toast.error("Complete The Form")
         }
+        setProcess(true)
     };
 
     return (
@@ -188,14 +191,27 @@ export default function RegisterPage() {
                                 />
                             </Grid>
                         </Grid>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={handleSubmit}
-                        >
-                            Sign Up
-                        </Button>
+                        {
+                            process ?
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    onClick={handleSubmit}
+                                >
+                                    Sign Up
+                                </Button>
+                                :
+                                <Button
+                                    disabled
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    onClick={handleSubmit}
+                                >
+                                    Sign Up
+                                </Button>
+                        }
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="#" variant="body2">
