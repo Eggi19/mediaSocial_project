@@ -6,8 +6,8 @@ export default function VerificationPage(){
 
     const getParams = () => {
         try {
-            const token = searchParams.get('token')
-            
+            let token = searchParams.get('token')
+            token = "Bearer " + token
         } catch (error) {
             
         }
