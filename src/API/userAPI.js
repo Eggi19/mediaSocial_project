@@ -10,3 +10,11 @@ export function registerUser(data){
         passwordConfirm: data.passwordConfirm
     })
 }
+
+export function userVerification(token){
+    return axios.post(`${process.env.REACT_APP_API_URL}/users/verification`, {}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
