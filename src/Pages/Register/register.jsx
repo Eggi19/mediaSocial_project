@@ -45,35 +45,45 @@ export default function RegisterPage() {
         const email = _email.current.value
         const password = _password.current.value
         const passwordConfirm = _passwordConfirm.current.value
+        const isPasswordValid = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+        const isEmail = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
 
         if (firstName && lastName && username && email && password && passwordConfirm) {
-            if (password === passwordConfirm) {
-                const result = await registerUser({
-                    firstName,
-                    lastName,
-                    username,
-                    email,
-                    password,
-                    passwordConfirm
-                })
+            if (isEmail.test(email)) {
+                if (password === passwordConfirm) {
+                    if (isPasswordValid.test(password)) {
+                        const result = await registerUser({
+                            firstName,
+                            lastName,
+                            username,
+                            email,
+                            password,
+                            passwordConfirm
+                        })
 
-                if (result.data?.success) {
-                    _firstName.current.value = ""
-                    _lastName.current.value = ""
-                    _username.current.value = ""
-                    _email.current.value = ""
-                    _password.current.value = ""
-                    _passwordConfirm.current.value = ""
+                        if (result.data?.success) {
+                            _firstName.current.value = ""
+                            _lastName.current.value = ""
+                            _username.current.value = ""
+                            _email.current.value = ""
+                            _password.current.value = ""
+                            _passwordConfirm.current.value = ""
 
-                    toast.success('Register Success')
+                            toast.success('Register Success')
+                        } else {
+                            toast.error(result.data?.message)
+                        }
+                    } else {
+                        toast.error("Password is weak")
+                    }
                 } else {
-                    toast.error(result.data?.message)
+                    toast.error("Password Does Not Match")
                 }
             } else {
-                toast.error("Password Does Not Match")
+                toast.error("Email Is Not Valid")
             }
-        }else{
-            toast.error("Password Does Not Match")
+        } else {
+            toast.error("Complete The Form")
         }
     };
 
@@ -156,6 +166,7 @@ export default function RegisterPage() {
                                     id="password"
                                     autoComplete="new-password"
                                     inputRef={_password}
+                                    helperText="Passwords should contain at least 8 characters including an uppercase letter, a symbol, and a number."
                                 />
                             </Grid>
                             <Grid item xs={12}>
