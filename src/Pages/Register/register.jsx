@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import toast, { Toaster } from 'react-hot-toast';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { registerUser } from '../../API/userAPI';
 
@@ -45,20 +46,43 @@ export default function RegisterPage() {
         const password = _password.current.value
         const passwordConfirm = _passwordConfirm.current.value
 
-        const result = await registerUser({
-            firstName,
-            lastName,
-            username,
-            email,
-            password,
-            passwordConfirm
-        })
+        if (firstName && lastName && username && email && password && passwordConfirm) {
+            if (password === passwordConfirm) {
+                const result = await registerUser({
+                    firstName,
+                    lastName,
+                    username,
+                    email,
+                    password,
+                    passwordConfirm
+                })
 
-        console.log(result);
+                if (result.data?.success) {
+                    _firstName.current.value = ""
+                    _lastName.current.value = ""
+                    _username.current.value = ""
+                    _email.current.value = ""
+                    _password.current.value = ""
+                    _passwordConfirm.current.value = ""
+
+                    toast.success('Register Success')
+                } else {
+                    toast.error(result.data?.message)
+                }
+            } else {
+                toast.error("Password Does Not Match")
+            }
+        }else{
+            toast.error("Password Does Not Match")
+        }
     };
 
     return (
         <ThemeProvider theme={defaultTheme}>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
