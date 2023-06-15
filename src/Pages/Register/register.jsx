@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import toast, { Toaster } from 'react-hot-toast';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { registerUser } from '../../API/userAPI';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
     return (
@@ -37,6 +38,7 @@ export default function RegisterPage() {
     const _email = React.useRef()
     const _password = React.useRef()
     const _passwordConfirm = React.useRef()
+    const navigate = useNavigate()
 
     const handleSubmit = async () => {
         const firstName = _firstName.current.value
@@ -46,7 +48,7 @@ export default function RegisterPage() {
         const password = _password.current.value
         const passwordConfirm = _passwordConfirm.current.value
         const isPasswordValid = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
-        const isEmail = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}')
+        const isEmail = new RegExp('[a-z0-9]+@[a-z]+[a-z]{2,3}')
 
         if (firstName && lastName && username && email && password && passwordConfirm) {
             if (isEmail.test(email)) {
@@ -70,6 +72,10 @@ export default function RegisterPage() {
                             _passwordConfirm.current.value = ""
 
                             toast.success('Register Success')
+
+                            setTimeout(() => {
+                                navigate("/login")
+                            }, 1000)
                         } else {
                             toast.error(result.data?.message)
                         }
