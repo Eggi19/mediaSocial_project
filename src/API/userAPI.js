@@ -1,6 +1,6 @@
-const axios = require("axios")
+import axios from "axios"
 
-export default function registerUser(data){
+export function registerUser(data){
     return axios.post(`${process.env.REACT_APP_API_URL}/users/`, {
         firstName: data.firstName,
         lastName: data.lastName,
