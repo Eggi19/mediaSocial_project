@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -44,14 +42,16 @@ export default function LoginPage() {
       if (usernameOrEmail && password) {
         const result = await loginRequest({ usernameOrEmail, password })
 
-        if(result.data?.data?.success){
+        if (result.data?.success) {
           localStorage.setItem('id', result.data?.data?.id)
-          toast.success('Successfully toasted!')
-        }else{
-          throw ({message: result.data?.message})
+          toast.success('Login Success!')
+        } else {
+          const errorMessage = { message: result.data?.message }
+          throw errorMessage
         }
       } else {
-        throw ({ message: "Please Complete The Form" })
+        const errorMessage = { message: "Please Complete The Form" }
+        throw errorMessage
       }
     } catch (error) {
       toast.error(error.message)
@@ -118,10 +118,6 @@ export default function LoginPage() {
                 id="password"
                 autoComplete="current-password"
                 inputRef={_password}
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
               />
               <Button
                 fullWidth
