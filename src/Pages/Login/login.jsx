@@ -9,6 +9,10 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import toast, { Toaster } from 'react-hot-toast';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { loginRequest } from '../../API/userAPI';
@@ -36,6 +40,7 @@ export default function LoginPage() {
   const _password = React.useRef()
   const [process, setProcess] = React.useState(true)
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = React.useState(true)
 
   const handleSubmit = async () => {
     try {
@@ -71,8 +76,16 @@ export default function LoginPage() {
 
   const protectLoginPage = () => {
     const isLogin = localStorage.getItem('id')
-    if(isLogin){
+    if (isLogin) {
       navigate('/posts')
+    }
+  }
+
+  const onShowPassword = () => {
+    if (showPassword) {
+      setShowPassword(false)
+    } else {
+      setShowPassword(true)
     }
   }
 
@@ -135,10 +148,32 @@ export default function LoginPage() {
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={!showPassword ? 'text' : 'password'}
                 id="password"
                 autoComplete="current-password"
                 inputRef={_password}
+                InputProps={
+                  showPassword ?
+                    {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => onShowPassword()} aria-label="delete" color="primary">
+                            <VisibilityIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }
+                    :
+                    {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => onShowPassword()} aria-label="delete" color="primary">
+                            <VisibilityOffIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }
+                }
               />
               {
                 process ?
