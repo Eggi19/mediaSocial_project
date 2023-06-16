@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import toast, { Toaster } from 'react-hot-toast';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { loginRequest } from '../../API/userAPI';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -33,9 +34,12 @@ const defaultTheme = createTheme();
 export default function LoginPage() {
   const _usernameOrEmail = React.useRef()
   const _password = React.useRef()
+  const [process, setProcess] = React.useState(true)
+  const navigate = useNavigate()
 
   const handleSubmit = async () => {
     try {
+      setProcess(false)
       const usernameOrEmail = _usernameOrEmail.current.value
       const password = _password.current.value
 
@@ -45,6 +49,12 @@ export default function LoginPage() {
         if (result.data?.success) {
           localStorage.setItem('id', result.data?.data?.id)
           toast.success('Login Success!')
+          _usernameOrEmail.current.value = ""
+          _password.current.value = ""
+
+          setTimeout(() => {
+            navigate("/posts")
+          }, 1000);
         } else {
           const errorMessage = { message: result.data?.message }
           throw errorMessage
@@ -53,11 +63,22 @@ export default function LoginPage() {
         const errorMessage = { message: "Please Complete The Form" }
         throw errorMessage
       }
+      setProcess(true)
     } catch (error) {
       toast.error(error.message)
     }
   };
 
+  const protectLoginPage = () => {
+    const isLogin = localStorage.getItem('id')
+    if(isLogin){
+      navigate('/posts')
+    }
+  }
+
+  React.useEffect(() => {
+    protectLoginPage()
+  }, [])
   return (
     <ThemeProvider theme={defaultTheme}>
       <Toaster
@@ -119,14 +140,26 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 inputRef={_password}
               />
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleSubmit}
-              >
-                Sign In
-              </Button>
+              {
+                process ?
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    onClick={handleSubmit}
+                  >
+                    Sign In
+                  </Button>
+                  : <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    onClick={handleSubmit}
+                    disabled
+                  >
+                    Sign In
+                  </Button>
+              }
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">

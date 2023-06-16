@@ -118,6 +118,17 @@ export default function RegisterPage() {
         }
     }
 
+    const protectRegister = () => {
+        const isLogin = localStorage.getItem('id')
+        if(isLogin){
+            navigate('/posts')
+        }
+    }
+
+    React.useEffect(() => {
+        protectRegister()
+    }, [])
+    
     return (
         <ThemeProvider theme={defaultTheme}>
             <Toaster
