@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import toast, { Toaster } from 'react-hot-toast';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { loginRequest } from '../../API/userAPI';
 
@@ -35,22 +36,34 @@ export default function LoginPage() {
   const _usernameOrEmail = React.useRef()
   const _password = React.useRef()
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     try {
       const usernameOrEmail = _usernameOrEmail.current.value
       const password = _password.current.value
 
-      const result = await loginRequest({usernameOrEmail, password})
+      if (usernameOrEmail && password) {
+        const result = await loginRequest({ usernameOrEmail, password })
 
-      console.log(result);
-      localStorage.setItem('id', result.data?.data?.id)
+        if(result.data?.data?.success){
+          localStorage.setItem('id', result.data?.data?.id)
+          toast.success('Successfully toasted!')
+        }else{
+          throw ({message: result.data?.message})
+        }
+      } else {
+        throw ({ message: "Please Complete The Form" })
+      }
     } catch (error) {
-
+      toast.error(error.message)
     }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
