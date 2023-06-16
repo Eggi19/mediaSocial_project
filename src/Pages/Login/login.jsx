@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { loginRequest } from '../../API/userAPI';
 
 function Copyright(props) {
   return (
@@ -31,13 +32,21 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const _usernameOrEmail = React.useRef()
+  const _password = React.useRef()
+
+  const handleSubmit = async() => {
+    try {
+      const usernameOrEmail = _usernameOrEmail.current.value
+      const password = _password.current.value
+
+      const result = await loginRequest({usernameOrEmail, password})
+
+      console.log(result);
+      localStorage.setItem('id', result.data?.data?.id)
+    } catch (error) {
+
+    }
   };
 
   return (
@@ -74,16 +83,17 @@ export default function LoginPage() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email or Username"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                inputRef={_usernameOrEmail}
               />
               <TextField
                 margin="normal"
@@ -94,16 +104,17 @@ export default function LoginPage() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                inputRef={_password}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
               <Button
-                type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={handleSubmit}
               >
                 Sign In
               </Button>
