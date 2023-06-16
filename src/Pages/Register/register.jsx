@@ -9,6 +9,10 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import toast, { Toaster } from 'react-hot-toast';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { registerUser } from '../../API/userAPI';
@@ -32,6 +36,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function RegisterPage() {
+    const [showPassword, setShowPassword] = React.useState(true)
+    const [showConfirmPassword, setShowConfirmPassword] = React.useState(true)
     const _firstName = React.useRef()
     const _lastName = React.useRef()
     const _username = React.useRef()
@@ -95,6 +101,22 @@ export default function RegisterPage() {
         }
         setProcess(true)
     };
+
+    const onShowPassword = () => {
+        if (showPassword) {
+            setShowPassword(false)
+        } else {
+            setShowPassword(true)
+        }
+    }
+
+    const onShowConfirmPassword = () => {
+        if (showConfirmPassword) {
+            setShowConfirmPassword(false)
+        } else {
+            setShowConfirmPassword(true)
+        }
+    }
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -171,11 +193,33 @@ export default function RegisterPage() {
                                     fullWidth
                                     name="password"
                                     label="Password"
-                                    type="password"
+                                    type={!showPassword ? 'text' : 'password'}
                                     id="password"
                                     autoComplete="new-password"
                                     inputRef={_password}
                                     helperText="Passwords should contain at least 8 characters including an uppercase letter, a symbol, and a number."
+                                    InputProps={
+                                        showPassword ?
+                                            {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton onClick={() => onShowPassword()} aria-label="delete" color="primary">
+                                                            <VisibilityIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }
+                                            :
+                                            {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton onClick={() => onShowPassword()} aria-label="delete" color="primary">
+                                                            <VisibilityOffIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -184,10 +228,34 @@ export default function RegisterPage() {
                                     fullWidth
                                     name="confirmPassword"
                                     label="Password Confirmation"
-                                    type="password"
+                                    type={!showConfirmPassword ? 'text' : 'password'}
                                     id="confirmPassword"
                                     autoComplete="new-password"
                                     inputRef={_passwordConfirm}
+                                    InputProps={
+                                        showConfirmPassword ?
+                                            {
+                                                endAdornment: (
+
+                                                    <InputAdornment position="end">
+                                                        <IconButton onClick={() => onShowConfirmPassword()} aria-label="delete" color="primary">
+                                                            <VisibilityIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }
+                                            :
+                                            {
+                                                endAdornment: (
+
+                                                    <InputAdornment position="end">
+                                                        <IconButton onClick={() => onShowConfirmPassword()} aria-label="delete" color="primary">
+                                                            <VisibilityOffIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }
+                                    }
                                 />
                             </Grid>
                         </Grid>
