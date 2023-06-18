@@ -64,12 +64,12 @@ export default function PostingPage() {
             const caption = _caption.current.value
             const image = _image.current.files[0]
             const result = await createPost({userId, caption, image})
-            
+
             if(result?.data?.success){
                 _caption.current.value = ""
                 _image.current.files = ""
-                callPostData()
             }
+            callPostData()
         } catch (error) {
             
         }
