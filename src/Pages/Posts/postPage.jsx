@@ -15,7 +15,9 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { getPostData, likePost } from '../../API/postAPI';
+import TextField from '@mui/material/TextField';
+import { createPost, getPostData, likePost } from '../../API/postAPI';
+import Button from '@mui/material/Button';
 import Navbar from '../../Component/navbar';
 
 function Copyright() {
@@ -32,8 +34,9 @@ function Copyright() {
 }
 
 export default function PostingPage() {
-
     const [postData, setPostData] = React.useState([])
+    const _caption = React.useRef()
+    const _image = React.useRef()
 
     const callPostData = async () => {
         try {
@@ -55,13 +58,45 @@ export default function PostingPage() {
         }
     }
 
+    const onCreatePost = async () => {
+        try {
+            const userId = localStorage.getItem('id')
+            const caption = _caption.current.value
+            const image = _image.current.files[0]
+            const result = await createPost({userId, caption, image})
+            
+            if(result?.data?.success){
+                _caption.current.value = ""
+                _image.current.files = ""
+                callPostData()
+            }
+        } catch (error) {
+            
+        }
+    }
+
     React.useEffect(() => {
         callPostData()
     }, [])
     return (
         <Box>
-            <Navbar page="Timeline"/>
+            <Navbar page="Timeline" />
             <Container maxWidth={false} sx={{ maxWidth: '500px' }}>
+                <div className='py-3 flex flex-col'>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Caption"
+                        multiline
+                        rows={2}
+                        defaultValue=""
+                        inputRef={_caption}
+                    />
+                    <TextField
+                        type='file'
+                        inputRef={_image}
+                    />
+                    <Button variant="contained" onClick={onCreatePost}>Upload</Button>
+                </div>
                 {/* End hero unit */}
                 <Grid container spacing={8} direction={"column"} alignItems="center" justifyContent="center">
                     {postData.map((value) => (
