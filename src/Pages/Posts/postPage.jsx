@@ -19,7 +19,7 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { getPostData } from '../../API/postAPI';
+import { getPostData, likePost } from '../../API/postAPI';
 
 function Copyright() {
     return (
@@ -48,6 +48,16 @@ export default function PostingPage() {
         }
     }
 
+    const onLikePost = async (postId) => {
+        try {
+            const userId = localStorage.getItem('id')
+            await likePost({ postId, userId })
+            callPostData()
+        } catch (error) {
+
+        }
+    }
+
     React.useEffect(() => {
         callPostData()
     }, [])
@@ -57,10 +67,12 @@ export default function PostingPage() {
                 <CssBaseline />
                 <AppBar position="relative">
                     <Toolbar>
-                        <CameraIcon sx={{ mr: 2 }} />
-                        <Typography variant="h6" color="inherit" noWrap>
-                            Album layout
-                        </Typography>
+                        <div>
+                            <CameraIcon sx={{ mr: 2 }} />
+                            <Typography variant="h6" color="inherit" noWrap>
+                                Timeline
+                            </Typography>
+                        </div>
                     </Toolbar>
                 </AppBar>
                 {/* End hero unit */}
@@ -97,7 +109,7 @@ export default function PostingPage() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites">
+                                    <IconButton aria-label="add to favorites" onClick={() => onLikePost(value.id)}>
                                         <FavoriteIcon />
                                     </IconButton>
                                     <IconButton aria-label="share">
