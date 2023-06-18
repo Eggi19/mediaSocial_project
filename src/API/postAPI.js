@@ -5,11 +5,18 @@ export function getPostData() {
 }
 
 export function createPost(data) {
-    return axios.post(`${process.env.REACT_APP_API_URL}/posts/single-upload`, {
-        caption: data.caption,
-        userId: data.userId,
-        image: data.image
-    })
+    return axios.post(`${process.env.REACT_APP_API_URL}/posts/single-upload`,
+        {
+            caption: data.caption,
+            userId: data.userId,
+            image: data.image
+        },
+        {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+    )
 }
 
 export function likePost(data) {
