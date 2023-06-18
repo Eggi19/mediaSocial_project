@@ -1,14 +1,28 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
+import CssBaseline from '@mui/material/CssBaseline';
+import CameraIcon from '@mui/icons-material/PhotoCamera';
+import Toolbar from '@mui/material/Toolbar';
+import AppBar from '@mui/material/AppBar';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import Collapse from '@mui/material/Collapse';
+import Avatar from '@mui/material/Avatar';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { red } from '@mui/material/colors';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getPostData } from '../../API/postAPI';
 
@@ -25,21 +39,40 @@ function Copyright() {
     );
 }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+interface ExpandMoreProps extends IconButtonProps {
+    expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
+}));
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function PostingPage() {
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
+
     const [postData, setPostData] = React.useState([])
 
-    const callPostData = async() => {
+    const callPostData = async () => {
         try {
             const result = await getPostData()
 
             setPostData(result.data?.data)
         } catch (error) {
-            
+
         }
     }
 
@@ -47,47 +80,62 @@ export default function PostingPage() {
         callPostData()
     }, [])
     return (
-        <Container
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ minHeight: '100vh' }}
-        >
-            <main>
-                <Container sx={{ px: 40 }} maxWidth="md">
-                    {/* End hero unit */}
+        <Box>
+            <Container maxWidth={false} sx={{ maxWidth: '500px' }}>
+                <CssBaseline />
+                <AppBar position="relative">
+                    <Toolbar>
+                        <CameraIcon sx={{ mr: 2 }} />
+                        <Typography variant="h6" color="inherit" noWrap>
+                            Album layout
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                {/* End hero unit */}
+                <Grid container spacing={8} direction={"column"}>
                     {postData.map((value) => (
-                        <Card
-                            sx={{ width: '50%', height: '100%', display: 'flex', flexDirection: 'column' }}
-                        >
-                            <CardMedia
-                                component="div"
-                                sx={{
-                                    // 16:9
-                                    pt: '56.25%',
-                                }}
-                                image={`${process.env.REACT_APP_API_URL}/image/${value.image}`}
-                            />
-                            <CardContent sx={{ flexGrow: 1 }}>
-                                <Typography>
-                                   {value.caption}
-                                </Typography>
-                                <Typography>
-                                   {value.Likes?.length} Like, {value.Comments?.length} Comment
-                                </Typography>
-                                <Typography>
-                                   post created at: {value.createdAt.split('T')[0]}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Like</Button>
-                            </CardActions>
-                        </Card>
+                        <Grid item key={value} xs={12} sm={6} md={4}>
+                            <Card sx={{ maxWidth: 345 }}>
+                                <CardHeader
+                                    avatar={
+                                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                            R
+                                        </Avatar>
+                                    }
+                                    action={
+                                        <IconButton aria-label="settings">
+                                            <MoreVertIcon />
+                                        </IconButton>
+                                    }
+                                    title={value.User?.fullName}
+                                    subheader={value.createdAt.split('T')[0]}
+                                />
+                                <CardMedia
+                                    component="img"
+                                    height="194"
+                                    image={`${process.env.REACT_APP_API_URL}/image/${value.image}`}
+                                />
+                                <CardContent>
+                                    <Typography variant="body1" color="text.secondary">
+                                        {value.caption}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {value.Likes?.length} Like, {value.Comments?.length} Comment
+                                    </Typography>
+                                </CardContent>
+                                <CardActions disableSpacing>
+                                    <IconButton aria-label="add to favorites">
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="share">
+                                        <ShareIcon />
+                                    </IconButton>
+                                </CardActions>
+                            </Card>
+                        </Grid>
                     ))}
-                </Container>
-            </main>
+                </Grid>
+            </Container>
             {/* Footer */}
             <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
                 <Typography variant="h6" align="center" gutterBottom>
@@ -104,6 +152,6 @@ export default function PostingPage() {
                 <Copyright />
             </Box>
             {/* End footer */}
-        </Container >
+        </Box >
     );
 }
