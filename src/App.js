@@ -4,6 +4,7 @@ import RegisterPage from './Pages/Register/register';
 import LoginPage from './Pages/Login/login';
 import VerificationPage from './Pages/VerificationPage/verification';
 import PostingPage from './Pages/Posts/postPage';
+import ProfilePage from './Pages/Profile/profile';
 
 function App() {
   return (
@@ -27,6 +28,11 @@ function App() {
         <Route path='/posts' element={
           <>
             <PostingPage />
+          </>
+        } />
+        <Route path='/profile' element={
+          <>
+            <ProfilePage />
           </>
         } />
       </Routes>

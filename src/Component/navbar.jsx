@@ -28,9 +28,11 @@ export default function Navbar(props) {
                             </Typography>
                         </div>
                         <div className='flex'>
-                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                R
-                            </Avatar>
+                            <div className='hover:cursor-pointer'>
+                                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" onClick={() => navigate('/profile')}>
+                                    R
+                                </Avatar>
+                            </div>
                             <IconButton aria-label="settings" onClick={onLogout}>
                                 <LogoutIcon />
                             </IconButton>
