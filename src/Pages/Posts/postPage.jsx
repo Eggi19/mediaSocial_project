@@ -92,10 +92,10 @@ export default function PostingPage() {
                     </Toolbar>
                 </AppBar>
                 {/* End hero unit */}
-                <Grid container spacing={8} direction={"column"}>
+                <Grid container spacing={8} direction={"column"} alignItems="center" justifyContent="center">
                     {postData.map((value) => (
                         <Grid item key={value} xs={12} sm={6} md={4}>
-                            <Card sx={{ maxWidth: 345 }}>
+                            <Card sx={{ width: 400 }}>
                                 <CardHeader
                                     avatar={
                                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -114,6 +114,7 @@ export default function PostingPage() {
                                     component="img"
                                     height="194"
                                     image={`${process.env.REACT_APP_API_URL}/image/${value.image}`}
+                                    sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
                                 />
                                 <CardContent>
                                     <Typography variant="body1" color="text.secondary">
