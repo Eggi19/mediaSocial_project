@@ -7,10 +7,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
-import CssBaseline from '@mui/material/CssBaseline';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
-import Toolbar from '@mui/material/Toolbar';
-import AppBar from '@mui/material/AppBar';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import Avatar from '@mui/material/Avatar';
@@ -20,6 +16,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { getPostData, likePost } from '../../API/postAPI';
+import Navbar from '../../Component/navbar';
 
 function Copyright() {
     return (
@@ -63,18 +60,8 @@ export default function PostingPage() {
     }, [])
     return (
         <Box>
+            <Navbar page="Timeline"/>
             <Container maxWidth={false} sx={{ maxWidth: '500px' }}>
-                <CssBaseline />
-                <AppBar position="relative">
-                    <Toolbar>
-                        <div>
-                            <CameraIcon sx={{ mr: 2 }} />
-                            <Typography variant="h6" color="inherit" noWrap>
-                                Timeline
-                            </Typography>
-                        </div>
-                    </Toolbar>
-                </AppBar>
                 {/* End hero unit */}
                 <Grid container spacing={8} direction={"column"} alignItems="center" justifyContent="center">
                     {postData.map((value) => (
