@@ -42,7 +42,8 @@ export default function ProfilePage() {
             const userId = localStorage.getItem('id')
 
             const result = await editProfile({ profilePicture, fullName, bio, username, userId })
-            if (result.data?.success) {
+            console.log(result.data.message);
+            if (result.data?.status) {
                 handleEdit()
                 getUserData()
                 toast.success('Edit Success')
@@ -53,7 +54,7 @@ export default function ProfilePage() {
         } catch (error) {
             handleEdit()
             getUserData()
-            toast.error(error.messsage)
+            toast.error(error.message)
         }
     }
 
@@ -62,6 +63,10 @@ export default function ProfilePage() {
     }, [])
     return (
         <>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <Navbar page="Profile" />
             <Container maxWidth={false} sx={{ maxWidth: '500px' }}>
                 <div>
