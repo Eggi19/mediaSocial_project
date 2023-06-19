@@ -20,9 +20,12 @@ export function userVerification(token){
 }
 
 export function loginRequest(data){
-    console.log(data);
     return axios.post(`${process.env.REACT_APP_API_URL}/login/`, {
         usernameOrEmail: data.usernameOrEmail,
         password: data.password
     })
+}
+
+export function getUser(userId){
+    return axios.get(`${process.env.REACT_APP_API_URL}/users/${userId}`)
 }
