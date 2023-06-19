@@ -16,11 +16,16 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextField from '@mui/material/TextField';
-import { createPost, deletePost, getPostData, likePost } from '../../API/postAPI';
+import { createPost, deletePost, editPost, getPostData, likePost } from '../../API/postAPI';
 import Button from '@mui/material/Button';
 import Navbar from '../../Component/navbar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 function Copyright() {
     return (
@@ -36,19 +41,32 @@ function Copyright() {
 }
 
 export default function PostingPage() {
+    const [getPostId, setGetPostId] = React.useState(0)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const handleClickMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleCloseMenu = () => {
         setAnchorEl(null);
+    };
+
+    const [openDialog, setOpenDialog] = React.useState(false);
+
+    const handleClickOpen = (postId) => {
+        setGetPostId(postId)
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
     };
 
     const [postData, setPostData] = React.useState([])
     const _caption = React.useRef()
     const _image = React.useRef()
     const [userId, setUserId] = React.useState(0)
+    const _newCaption = React.useRef()
 
     const getUserId = () => {
         const userId = localStorage.getItem('id')
@@ -95,7 +113,15 @@ export default function PostingPage() {
     const onDeletePost = async (postId) => {
         await deletePost(postId)
         callPostData()
+        handleCloseMenu()
+    }
+
+    const onEditPost = async (postId) => {
+        const caption = _newCaption.current.value
+        await editPost({ postId, caption })
         handleClose()
+        handleCloseMenu()
+        callPostData()
     }
 
     React.useEffect(() => {
@@ -134,19 +160,19 @@ export default function PostingPage() {
                                     {
                                         Number(userId) === value.User?.id ?
                                             <Box>
-                                                <IconButton aria-label="settings" onClick={handleClick}>
+                                                <IconButton aria-label="settings" onClick={handleClickMenu}>
                                                     <MoreVertIcon />
                                                 </IconButton>
                                                 <Menu
                                                     id="basic-menu"
                                                     anchorEl={anchorEl}
                                                     open={open}
-                                                    onClose={handleClose}
+                                                    onClose={handleCloseMenu}
                                                     MenuListProps={{
                                                         'aria-labelledby': 'basic-button',
                                                     }}
                                                 >
-                                                    <MenuItem onClick={handleClose}>Edit</MenuItem>
+                                                    <MenuItem onClick={() => handleClickOpen(value.id)}>Edit</MenuItem>
                                                     <MenuItem onClick={() => onDeletePost(value.id)}>Delete</MenuItem>
                                                 </Menu>
                                             </Box>
@@ -200,6 +226,28 @@ export default function PostingPage() {
                 <Copyright />
             </Box>
             {/* End footer */}
+            <Dialog open={openDialog} onClose={handleClose}>
+                <DialogTitle>Subscribe</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Edit your post's caption here
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="caption"
+                        label="New Caption"
+                        type="text"
+                        fullWidth
+                        inputRef={_newCaption}
+                        variant="standard"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={() => onEditPost(getPostId)}>Save</Button>
+                </DialogActions>
+            </Dialog>
         </Box >
     );
 }

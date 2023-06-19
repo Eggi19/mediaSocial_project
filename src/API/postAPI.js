@@ -29,3 +29,9 @@ export function likePost(data) {
 export function deletePost(postId) {
     return axios.delete(`${process.env.REACT_APP_API_URL}/posts/${postId}`)
 }
+
+export function editPost(data) {
+    return axios.put(`${process.env.REACT_APP_API_URL}/posts/${data.postId}`, {
+        caption: data.caption
+    })
+}
