@@ -39,12 +39,13 @@ export default function SendEmail() {
             const email = _email.current.value
             const result = await sendEmail(email)
             if (result.data?.success) {
+                setDisabled(false)
                 toast.success('Check Your Email')
             } else {
-                setDisabled(false)
                 throw result.data?.message
             }
         } catch (error) {
+            setDisabled(false)
             toast.error(error.message)
         }
     }
