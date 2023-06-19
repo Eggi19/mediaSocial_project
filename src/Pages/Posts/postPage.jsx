@@ -104,9 +104,7 @@ export default function PostingPage() {
                             <Card sx={{ width: 400 }}>
                                 <CardHeader
                                     avatar={
-                                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                            R
-                                        </Avatar>
+                                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" src={`${process.env.REACT_APP_API_URL}/profilePicture/${value.User?.profilePicture}`}></Avatar>
                                     }
                                     action={
                                         <IconButton aria-label="settings">
