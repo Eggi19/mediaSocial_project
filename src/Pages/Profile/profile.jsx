@@ -5,6 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import { editProfile, getUser } from "../../API/userAPI";
 import { Button, Container, IconButton, TextField } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function ProfilePage() {
     const [userData, setUserData] = useState({})
@@ -41,11 +42,18 @@ export default function ProfilePage() {
             const userId = localStorage.getItem('id')
 
             const result = await editProfile({ profilePicture, fullName, bio, username, userId })
-            
+            if (result.data?.success) {
+                handleEdit()
+                getUserData()
+                toast.success('Edit Success')
+            } else {
+                const errorMessage = { message: result.data?.message }
+                throw errorMessage
+            }
+        } catch (error) {
             handleEdit()
             getUserData()
-        } catch (error) {
-
+            toast.error(error.messsage)
         }
     }
 
