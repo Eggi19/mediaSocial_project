@@ -41,11 +41,10 @@ export default function SendEmail() {
             if (result.data?.success) {
                 toast.success('Check Your Email')
             } else {
+                setDisabled(false)
                 throw result.data?.message
             }
-            setDisabled(false)
         } catch (error) {
-            setDisabled(false)
             toast.error(error.message)
         }
     }

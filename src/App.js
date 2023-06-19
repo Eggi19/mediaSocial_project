@@ -6,6 +6,7 @@ import VerificationPage from './Pages/VerificationPage/verification';
 import PostingPage from './Pages/Posts/postPage';
 import ProfilePage from './Pages/Profile/profile';
 import SendEmail from './Pages/ForgetPassword/sendEmail';
+import ResetPassword from './Pages/ForgetPassword/resetPassword';
 
 function App() {
   return (
@@ -39,6 +40,11 @@ function App() {
         <Route path='/send-email-forget-password' element={
           <>
             <SendEmail />
+          </>
+        } />
+        <Route path='/forgetpassword' element={
+          <>
+            <ResetPassword />
           </>
         } />
       </Routes>

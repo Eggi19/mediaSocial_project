@@ -51,3 +51,11 @@ export function sendEmail(email) {
         email: email
     })
 }
+
+export function resetPassword(data) {
+    return axios.patch(`${process.env.REACT_APP_API_URL}/users/reset-password`, { password: data.password }, {
+        headers: {
+            Authorization: `Bearer ${data.token}`
+        }
+    })
+}

@@ -68,8 +68,8 @@ export default function LoginPage() {
         const errorMessage = { message: "Please Complete The Form" }
         throw errorMessage
       }
-      setProcess(true)
     } catch (error) {
+      setProcess(true)
       toast.error(error.message)
     }
   };
@@ -197,12 +197,14 @@ export default function LoginPage() {
               }
               <Grid container>
                 <Grid item xs>
-                  <Link onClick={() => navigate('/send-email-forget-password')} variant="body2">
-                    Forgot password?
-                  </Link>
+                  <div className='hover:cursor-pointer'>
+                    <Link onClick={() => navigate('/send-email-forget-password')} variant="body2">
+                      Forgot password?
+                    </Link>
+                  </div>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link onClick={() => navigate('/')} variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
