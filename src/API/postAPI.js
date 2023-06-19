@@ -25,3 +25,7 @@ export function likePost(data) {
         userId: data.userId
     })
 }
+
+export function deletePost(postId) {
+    return axios.delete(`${process.env.REACT_APP_API_URL}/posts/${postId}`)
+}

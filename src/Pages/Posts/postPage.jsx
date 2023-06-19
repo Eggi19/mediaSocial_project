@@ -16,9 +16,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextField from '@mui/material/TextField';
-import { createPost, getPostData, likePost } from '../../API/postAPI';
+import { createPost, deletePost, getPostData, likePost } from '../../API/postAPI';
 import Button from '@mui/material/Button';
 import Navbar from '../../Component/navbar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 function Copyright() {
     return (
@@ -34,9 +36,24 @@ function Copyright() {
 }
 
 export default function PostingPage() {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     const [postData, setPostData] = React.useState([])
     const _caption = React.useRef()
     const _image = React.useRef()
+    const [userId, setUserId] = React.useState(0)
+
+    const getUserId = () => {
+        const userId = localStorage.getItem('id')
+        setUserId(userId)
+    }
 
     const callPostData = async () => {
         try {
@@ -63,20 +80,27 @@ export default function PostingPage() {
             const userId = localStorage.getItem('id')
             const caption = _caption.current.value
             const image = _image.current.files[0]
-            const result = await createPost({userId, caption, image})
+            const result = await createPost({ userId, caption, image })
 
-            if(result?.data?.success){
+            callPostData()
+            if (result?.data?.success) {
                 _caption.current.value = ""
                 _image.current.files = ""
             }
-            callPostData()
         } catch (error) {
-            
+
         }
+    }
+
+    const onDeletePost = async (postId) => {
+        await deletePost(postId)
+        callPostData()
+        handleClose()
     }
 
     React.useEffect(() => {
         callPostData()
+        getUserId()
     }, [])
     return (
         <Box>
@@ -106,11 +130,30 @@ export default function PostingPage() {
                                     avatar={
                                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" src={`${process.env.REACT_APP_API_URL}/profilePicture/${value.User?.profilePicture}`}></Avatar>
                                     }
-                                    action={
-                                        <IconButton aria-label="settings">
-                                            <MoreVertIcon />
-                                        </IconButton>
+                                    action=
+                                    {
+                                        Number(userId) === value.User?.id ?
+                                            <Box>
+                                                <IconButton aria-label="settings" onClick={handleClick}>
+                                                    <MoreVertIcon />
+                                                </IconButton>
+                                                <Menu
+                                                    id="basic-menu"
+                                                    anchorEl={anchorEl}
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    MenuListProps={{
+                                                        'aria-labelledby': 'basic-button',
+                                                    }}
+                                                >
+                                                    <MenuItem onClick={handleClose}>Edit</MenuItem>
+                                                    <MenuItem onClick={() => onDeletePost(value.id)}>Delete</MenuItem>
+                                                </Menu>
+                                            </Box>
+                                            :
+                                            <></>
                                     }
+
                                     title={value.User?.fullName}
                                     subheader={value.createdAt.split('T')[0]}
                                 />
