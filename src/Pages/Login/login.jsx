@@ -197,7 +197,7 @@ export default function LoginPage() {
               }
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link onClick={() => navigate('/send-email-forget-password')} variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

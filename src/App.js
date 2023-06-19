@@ -5,6 +5,7 @@ import LoginPage from './Pages/Login/login';
 import VerificationPage from './Pages/VerificationPage/verification';
 import PostingPage from './Pages/Posts/postPage';
 import ProfilePage from './Pages/Profile/profile';
+import SendEmail from './Pages/ForgetPassword/sendEmail';
 
 function App() {
   return (
@@ -33,6 +34,11 @@ function App() {
         <Route path='/profile' element={
           <>
             <ProfilePage />
+          </>
+        } />
+        <Route path='/send-email-forget-password' element={
+          <>
+            <SendEmail />
           </>
         } />
       </Routes>

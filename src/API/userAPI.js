@@ -45,3 +45,9 @@ export function editProfile(data) {
         }
     )
 }
+
+export function sendEmail(email) {
+    return axios.post(`${process.env.REACT_APP_API_URL}/users/send-email`, {
+        email: email
+    })
+}
